@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # cs6400-2023-03-Team011
 
 ## Project Technology Stack
@@ -56,3 +57,6 @@ In the frontend code, update the ‘rootUrl’ property in ‘js/base.js’ to t
 3. Salesperson：         username:  user01     pw: pass01
 4. Manager：             username:  user02     pw: pass02
 5. Owner：               username:  owner      pw:123456
+=======
+# BuzzCarsFullStackWebDevelopment
+>>>>>>> 4de357b703d3d6071817a7abce48c74261879e5c
