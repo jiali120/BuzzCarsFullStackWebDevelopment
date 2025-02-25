@@ -1,6 +1,4 @@
 <<<<<<< HEAD
-# cs6400-2023-03-Team011
-
 ## Project Technology Stack
 ### The project is developed using the following technologies:
 Backend: Spring Boot 3
