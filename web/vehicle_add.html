@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuzzCar - Add Vehicle</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/base.js"></script>
+    <script src="./js/ajax.js"></script>
+    <style>
+        #container {
+            padding: 10px;
+        }
+
+        td:first-child {
+            width: 25%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="container">
+        <h2><a href="index.html">Home</a></h2>
+
+        <h3>Add Vehicle</h3>
+
+
+        <table>
+            <tr>
+                <td>VIN</td>
+                <td><input type="text" id="vin" name="vin" /> </td>
+            </tr>
+            <tr>
+                <td>manufacturer</td>
+                <td>
+
+                    <select id="manufacturerName" name="manufacturerName">
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>vehicleType</td>
+                <td>
+                    <select id="vehicleType" name="vehicleType">
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>modelName</td>
+                <td><input type="text" id="modelName" name="modelName" /> </td>
+            </tr>
+            <tr>
+                <td>modelYear</td>
+                <td>
+                    <select id="modelYear" name="modelYear">
+                        <option value="">--please choose--</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2019">2019</option>
+                        <option value="2018">2018</option>
+                        <option value="2017">2017</option>
+                        <option value="2016">2016</option>
+                        <option value="2015">2015</option>
+                        <option value="2014">2014</option>
+                        <option value="2013">2013</option>
+                        <option value="2012">2012</option>
+                        <option value="2011">2011</option>
+                        <option value="2010">2010</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>fuelType</td>
+                <td>
+                    <select id="fuelType" name="fuelType">
+                        <option value="">--please choose--</option>
+                        <option value="Gas">Gas</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Natural Gas">Natural Gas</option>
+                        <option value="Hybrid">Hybrid</option>
+                        <option value="Plugin Hybrid">Plugin Hybrid</option>
+                        <option value="Battery">Battery</option>
+                        <option value=" Fuel Cel"> Fuel Cel</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>vehicleDescription</td>
+                <td><input type="text" id="vehicleDescription" name="vehicleDescription" /> </td>
+            </tr>
+
+            <tr>
+                <td>mileage</td>
+                <td><input type="number" id="mileage" name="mileage" /> </td>
+            </tr>
+
+
+            <tr>
+                <td>condition</td>
+                <td>
+                    <select id="condition" name="condition">
+                        <option value="">--please choose--</option>
+                        <option value="Excellent">Excellent</option>
+                        <option value="Very Good">Very Good</option>
+                        <option value="Good">Good</option>
+                        <option value="Fair">Fair</option>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Colors</td>
+                <td>
+                    <select id="colors" name="colors" multiple style="height: 100px;">
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Seller</td>
+                <td>
+                    <select id="sellerId" name="sellerId">
+                    </select>
+                    <button type="button" onclick="newCustomer()">new customer</button>
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>Buy Date</td>
+                <td>
+                    <input type="date" id="buyDate" name="buyDate" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>Buy Price</td>
+                <td>
+                    <input type="number" id="buyPrice" name="buyPrice" />
+                </td>
+            </tr>
+
+
+
+            <tr>
+                <td colspan="2">
+                    <button type="button" onclick="saveForm()">Save</button>
+                </td>
+            </tr>
+        </table>
+
+      
+
+    </div>
+    <script>
+        function saveForm() {
+            var token = getTokenString()
+            // const form = document.getElementById('formData');
+            // const formData = new FormData(form);
+
+            // for (let pair of formData.entries()) {
+            //     console.log(pair[0] + ': ' + pair[1]);
+            //     data[pair[0]] = pair[1]
+            // }
+
+            var data = {}
+            const selectElement = document.getElementById('colors');
+            const selectedOptions = selectElement.selectedOptions;
+
+            const selectedValues = [];
+            for (let i = 0; i < selectedOptions.length; i++) {
+                selectedValues.push(selectedOptions[i].value);
+            }
+
+            data.vin = getValueById('vin');
+            data.manufacturerName = document.getElementById('manufacturerName').value;
+            data.vehicleType = document.getElementById('vehicleType').value;
+            data.modelName = document.getElementById('modelName').value;
+            data.modelYear = document.getElementById('modelYear').value;
+            data.fuelType = document.getElementById('fuelType').value;
+            data.vehicleDescription = document.getElementById('vehicleDescription').value;
+            data.mileage = document.getElementById('mileage').value;
+            data.condition = document.getElementById('condition').value;
+            data.sellerId = document.getElementById('sellerId').value;
+            data.buyDate = document.getElementById('buyDate').value;
+            data.buyPrice = document.getElementById('buyPrice').value;
+
+            data.colors = selectedValues.join(',')
+
+            ajax({
+                method: 'post',
+                url: config.rootUrl + 'api/v1/vehicle',
+                data: data,
+                success: function (res) {
+                    var code = res.code
+                    debugger
+
+                    console.log(res)
+                    if (code === 2000) {
+                        alert(res.message)
+                        location.href = 'vehicle_detail.html?vin=' + getValueById('vin')
+                    } else if (code === 4001) {
+                        alert(res.message)
+                        location.href = 'login.html'
+                    } else {
+                        alert(res.message)
+                    }
+                }
+            }, token)
+        }
+
+
+
+
+
+        function getVehicleTypeList() {
+            ajax({
+                type: 'get',
+                url: config.rootUrl + 'public/vehicle/types',
+                success: function (res) {
+                    var code = res.code
+                    var html = []
+                    var listEle = document.getElementById('vehicleType');
+                    listEle.innerHTML = '<option value="">--please choose--</option>';
+                    html.push('<option value="">--please choose--</option>')
+                    if (code === 2000) {
+                        var data = res.data
+                        data.forEach(item => {
+                            html.push('<option value="' + item.vtype + '">' + item.vtype + '</option>')
+                        })
+
+                        listEle.innerHTML = html.join('')
+                    }
+                }
+            })
+        }
+
+        function getManufacturerList() {
+            ajax({
+                type: 'get',
+                url: config.rootUrl + 'public/manufacturers',
+                success: function (res) {
+                    var code = res.code
+                    var html = []
+                    var listEle = document.getElementById('manufacturerName');
+                    listEle.innerHTML = '<option value="">--please choose--</option>';
+                    html.push('<option value="">--please choose--</option>')
+                    if (code === 2000) {
+                        var data = res.data
+                        data.forEach(item => {
+                            html.push('<option value="' + item.vmaker + '">' + item.vmaker + '</option>')
+                        })
+                        listEle.innerHTML = html.join('')
+                    }
+                }
+            })
+        }
+
+        function getColorList() {
+            ajax({
+                type: 'get',
+                url: config.rootUrl + 'public/colors',
+                success: function (res) {
+                    var code = res.code
+                    var html = []
+                    var listEle = document.getElementById('colors');
+                    listEle.innerHTML = '';
+
+                    if (code === 2000) {
+                        var data = res.data
+                        data.forEach(item => {
+                            html.push('<option value="' + item.vcolor + '">' + item.vcolor + '</option>')
+                        })
+                        listEle.innerHTML = html.join('')
+                    }
+                }
+            })
+        }
+
+
+
+        function queryCustomersByNum() {
+            var token = getTokenString()
+            ajax({
+                method: 'get',
+                url: config.rootUrl + 'api/v1/customer/query?num=',
+                success: function (res) {
+
+                    var code = res.code
+                    var html = []
+                    var listEle = document.getElementById('sellerId');
+                    listEle.innerHTML = '<option value="">--please choose--</option>';
+                    html.push('<option value="">--please choose--</option>')
+
+                    console.log(res)
+                    var code = res.code
+                    if (code === 2000) {
+                        var data = res.data
+                        data.forEach(item => {
+                            html.push('<option value="' + item.cid + '">' + item.firstName + ' ' + item.lastName + '</option>')
+                        })
+                        listEle.innerHTML = html.join('')
+                    } else if (code === 4001) {
+                        location.href = 'login.html'
+                    }
+                }
+            }, token)
+        }
+
+
+        getVehicleTypeList()
+        getManufacturerList()
+        getColorList()
+        queryCustomersByNum()
+
+        function newCustomer(){
+            const width = 600;
+            const height = 500;
+            const left = (window.innerWidth - width) / 2;
+            const top = (window.innerHeight - height) / 2;
+            
+            const features = `width=${width},height=${height},left=${left},top=${top}`;
+
+            window.open('customer_add.html', '_blank', features);
+        }
+
+    </script>
+
+</body>
+
+</html>

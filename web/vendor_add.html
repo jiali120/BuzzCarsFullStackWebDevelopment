@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuzzCar - Add Vendor</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/base.js"></script>
+    <script src="./js/ajax.js"></script>
+    <style>
+        #container {
+            padding: 10px;
+        }
+
+        td:first-child {
+            width: 25%;
+        }
+        #container{
+            width: 700px;
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="container">
+        <h3>Add Vendor</h3>
+        <table>
+            <tr>
+                <td>vendorName</td>
+             
+                <td><input type="text" id="vendorName" name="vendorName" /> </td>
+                </td>
+            </tr>
+            <tr>
+                <td>street</td>
+             
+                <td><input type="text" id="street" name="street" /> </td>
+              
+            </tr>
+            <tr>
+                <td>city</td>
+             
+                <td><input type="text" id="city" name="city" /> </td>
+              
+            </tr>
+            <tr>
+                <td>state</td>
+              
+                <td><input type="text" id="state" name="state" /> </td>
+               
+            </tr>
+            <tr>
+                <td>postalCode</td>
+             
+                <td><input type="text" id="postalCode" name="postalCode" /> </td>
+               
+            </tr>
+            <tr>
+                <td>vendorPhoneNumber</td>
+              
+                <td><input type="text" id="vendorPhoneNumber" name="vendorPhoneNumber" /> </td>
+               
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <button type="button" onclick="saveForm()">Save</button>
+                </td>
+            </tr>
+        </table>
+
+
+
+    </div>
+    <script>
+
+        function saveForm() {
+            var token = getTokenString()
+            var data = {}
+            data.vendorName = getValueById('vendorName');
+            data.street = getValueById('street');
+            data.city = getValueById('city');
+            data.state = getValueById('state');
+            data.postalCode = getValueById('postalCode');
+
+            data.vendorPhoneNumber = getValueById('vendorPhoneNumber');
+          
+
+
+            ajax({
+                method: 'post',
+                url: config.rootUrl + 'api/v1/vendor',
+                data: data,
+                success: function (res) {
+                    var code = res.code
+                    console.log(res)
+                 
+                    if (code === 2000) {
+                        alert(res.message)
+                        window.close()
+                    } else if (code === 4001) {
+                        alert(res.message)
+                        location.href = 'login.html'
+                    } else {
+                        alert(res.message)
+                    }
+                }
+            }, token)
+        }
+
+        window.onunload = function () {
+            if (window.opener && !window.opener.closed) {
+                window.opener.getVendorList(); 
+            }
+        };
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,446 @@
+body {
+    font-family: 'PingFang SC', Arial, serif, SansSerif;
+    font-size: 14px;
+    margin: 0 auto;
+    padding: 0;
+    color: #111827;
+    line-height: 20px;
+    background: #F0F2F3 fixed;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+*:focus {
+    outline: none;
+}
+
+form {
+    margin: 0;
+    padding: 0;
+}
+
+hr {
+    border-width: 0;
+    height: 1px;
+    line-height: 0;
+    margin: 30px 0;
+    page-break-after: always;
+    text-align: center;
+    width: 100%;
+    clear: both;
+    color: #d9d9d9;
+    background-color: #d9d9d9;
+    background-repeat: repeat-x
+}
+
+
+.container:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+
+.clearfix:before,
+.clearfix:after,
+.row:before,
+.row:after {
+    content: '\0020';
+    display: block;
+    overflow: hidden;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+
+.row:after,
+.clearfix:after {
+    clear: both;
+}
+
+.row,
+.clearfix {
+    zoom: 1;
+}
+
+.clear {
+    clear: both;
+    display: block;
+    overflow: hidden;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+
+h1,
+h2,
+h3 {
+    margin-bottom: 10px;
+}
+
+h4,
+h5,
+h6 {
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 22px;
+    line-height: 24px;
+}
+
+h2 {
+    font-size: 18px;
+    line-height: 20px;
+}
+
+h3 {
+    font-size: 16px;
+    line-height: 18px;
+}
+
+h4 {
+    font-size: 15px;
+    line-height: 18px;
+}
+
+h5 {
+    font-size: 14px;
+    line-height: 16px;
+}
+
+h6 {
+    font-size: 13px;
+    line-height: 15px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: normal;
+    color: #555
+}
+
+
+.title_pattern {
+    font-size: 16px;
+}
+
+.title_pattern span {
+    background: #fff;
+    font-weight: bold;
+}
+
+/* links */
+a,
+a:visited {
+    text-decoration: none;
+    font-weight: normal;
+    color: #dc6a4d
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a img {
+    border: none
+}
+
+
+/* lists, blockquotes and paragraphs */
+p,
+ul,
+ol,
+blockquote {
+    margin-bottom: 20px;
+}
+
+ul,
+ol {
+    margin: 10px 0 20px 20px;
+    list-style-position: inside
+}
+
+li ol,
+li ul {
+    list-style: square;
+    margin-bottom: 0;
+    margin-top: 0;
+}
+
+li ol {
+    list-style: decimal;
+}
+
+
+#container {
+    width: 1020px;
+    margin: 10px auto;
+    background: #fff;
+
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    border-radius: 2px;
+}
+
+#top-outer {
+    background: #ffffff;
+}
+
+#top {
+    height: 60px;
+    width: 1020px;
+    margin: 0 auto;
+}
+
+#logo {
+    float: left;
+
+    width: 270px;
+    height: 60px;
+    line-height: 60px;
+
+}
+
+#logo span {
+    font-size: 18px;
+    color: #dc6a4d;
+}
+
+
+#nav {
+    position: relative;
+    z-index: 9000;
+    float: right;
+    margin: 24px 28px 0 0;
+}
+
+#top-nav {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    overflow: visible;
+    position: relative;
+    float: left;
+    font-size: 14px;
+}
+
+.sf-menu a {
+    display: block;
+    position: relative;
+    padding: 0 12px 0 12px !important;
+    text-decoration: none;
+    font-weight: normal;
+    color: #4d4d4d;
+
+}
+
+.sf-menu a:visited {
+    color: #4d4d4d;
+}
+
+.sf-menu a:hover,
+.sf-menu li a.current {
+    color: #dc6a4d;
+}
+
+
+.sf-menu li li {
+    text-align: left;
+    line-height: 20px;
+    margin: 0;
+}
+
+.sf-menu,
+.sf-menu * {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 14px;
+
+}
+
+.sf-menu {
+    line-height: 100%;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    float: left;
+}
+
+.sf-menu ul {
+    position: absolute;
+    top: -999em;
+    width: 27em;
+    /* left offset of submenus need to match (see below) */
+}
+
+.sf-menu ul li {
+    width: 100%;
+}
+
+.sf-menu li:hover {
+    visibility: inherit;
+}
+
+.sf-menu li {
+    float: left;
+    position: relative;
+    margin: 0;
+}
+
+.sf-menu li li {
+    margin: 0 0;
+}
+
+
+.sf-menu li:hover ul {
+    left: -2px;
+    top: 2.6em;
+    z-index: 99;
+
+}
+
+ul.sf-menu li:hover li ul,
+ul.sf-menu li li:hover ul {
+    left: 10em;
+    top: -1px;
+    margin-left: 0;
+}
+
+ul.sf-menu li li:hover li ul {
+    top: -999em;
+
+}
+
+ul.sf-menu li li li:hover ul {
+    left: 10em;
+    top: -1px;
+
+}
+
+.sf-menu ul li a {
+    padding: 8px 0 8px 20px !important;
+    text-transform: capitalize;
+}
+
+
+.sf-menu li ul {
+    padding: 0;
+}
+
+.sf-menu a.sf-with-ul {
+    padding-right: 0;
+    min-width: 1px;
+}
+
+
+.sf-menu li li,
+.sf-menu li li:hover {
+    background: #fff;
+    text-transform: capitalize
+}
+
+.sf-menu li li:hover {
+    background: #f3f3f3
+}
+
+.sf-menu ul {
+    border: solid 1px #e1e1e1;
+}
+
+.sf-menu li li {
+    border-bottom: solid 1px #e1e1e1;
+}
+
+.sf-menu li li:last-child {
+    border-bottom: 0
+}
+
+.main {
+    padding: 10px 40px;
+}
+
+
+
+select, input{
+    height: 28px;
+}
+
+input{
+    padding-left: 6px;
+}
+/* 
+
+input {
+    padding: 10px;
+    border: none;
+    background-color: #f4f4f4;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 265px;
+}
+
+input:hover {
+    background-color: #e0e0e0;
+} */
+
+button {
+    padding: 8px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #dc6a4d;
+    color: #fff;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #e54a23;
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.search-form label{
+    padding-bottom: 6px;
+}
+
+td:first-child {
+
+    text-align: left;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    border: 1px solid #ECECEC;
+    font-weight: bold;
+    text-align: left;
+    padding: 8px;
+}
+
+td {
+    border: 1px solid #ECECEC;
+    padding: 8px;
+    word-wrap: break-word;
+    word-break: break-all;
+}

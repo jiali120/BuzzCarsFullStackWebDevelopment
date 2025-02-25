@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>BuzzCar</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/base.js"></script>
+    <script src="./js/ajax.js"></script>
+    <style>
+        #header {
+            height: 168px;
+            background: #d0d0d0;
+        }
+
+        #search-div {
+            padding: 20px;
+        }
+
+        #pending-box,
+        #saleStatusVal {
+            display: none;
+        }
+
+        #report{
+            padding: 10px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="outer-container">
+
+        <div id="top-outer">
+            <div id="top">
+                <div id="logo">
+                    <span>BuzzCar</span>
+                </div>
+                <div id="nav">
+                    <ul id="top-nav" class="sf-menu">
+                        <li id="user-info">
+
+
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="container">
+            
+            <div id="report">
+                Report:
+                <a href="report_seller_history.html">Seller History</a> | <a href="report_avg_time.html">Average Time In Inventory</a> | <a href="report_price_per_condition.html">Price Per Condition</a> | <a href="report_parts_statistics.html">Parts Statistics</a> | <a href="report_monthly_sales.html">Monthly Sales</a>
+            </div>
+
+            <div id="header">
+                <div>
+                    <div id="search-div">
+                        <div class="saleable">Quantity on sale: <span id="saleable">0</span></div>
+                        <div class="saleable" id="pending-box">Vehicles currently with parts pending along: <span
+                                id="pending">0</span><a style="margin-left: 20px;" href="vehicle_add.html">Add
+                                Vehicle</a></span>
+                        </div>
+                        <div class="search-form">
+                            <label>
+                                Vehicle Type:
+                                <select id="vehicleType" name="vehicleType">
+                                </select>
+                            </label>
+                            <label for="">
+                                Manufacturer:
+                                <select id="manufacturer" name="manufacturer">
+                                </select>
+                            </label>
+                            <label for="">
+                                Model Year:
+                                <select id="modelYear" name="modelYear">
+                                    <option value="">--please choose--</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022</option>
+                                    <option value="2021">2021</option>
+                                    <option value="2020">2020</option>
+                                    <option value="2019">2019</option>
+                                    <option value="2018">2018</option>
+                                    <option value="2017">2017</option>
+                                    <option value="2016">2016</option>
+                                    <option value="2015">2015</option>
+                                    <option value="2014">2014</option>
+                                    <option value="2013">2013</option>
+                                    <option value="2012">2012</option>
+                                    <option value="2011">2011</option>
+                                    <option value="2010">2010</option>
+                                </select>
+                            </label>
+                            <label for="">
+                                <!-- Gas, Diesel,
+                                Natural Gas, Hybrid, Plugin Hybrid, Battery, or Fuel Cel -->
+                                Fuel type:
+                                <select id="fuelType" name="fuelType">
+                                    <option value="">--please choose--</option>
+                                    <option value="Gas">Gas</option>
+                                    <option value="Diesel">Diesel</option>
+                                    <option value="Natural Gas">Natural Gas</option>
+                                    <option value="Hybrid">Hybrid</option>
+                                    <option value="Plugin Hybrid">Plugin Hybrid</option>
+                                    <option value="Battery">Battery</option>
+                                    <option value=" Fuel Cel"> Fuel Cel</option>
+                                </select>
+                            </label>
+                            <label for="">
+                                Color:
+                                <select id="color" name="color">
+                                </select>
+                            </label>
+                            <label for="">
+                                Keyword:
+                                <input type="text" name="keyword" id="keyword" style="width: 300px;"
+                                    placeholder="manufacturer/model year/model name/description">
+                            </label>
+
+                            <label for="" id="vinSearch">
+
+                            </label>
+
+                            <label for="" id="saleStatusVal">
+                                Sale Status:
+                                <select id="saleStatus" name="saleStatus">
+                                    <option value="">all vehicles</option>
+                                    <option value="sold">sold</option>
+                                    <option value="unsold">unsold</option>
+                                </select>
+                            </label>
+
+                            <label for="">
+                                <button id="saveBtn" onclick="queryList()">Search</button></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="content">
+                <div class="main">
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>VIN</th>
+                                <th>Vehicle type</th>
+                                <th>Model Year</th>
+                                <th>Manufacturer</th>
+                                <th>Model</th>
+                                <th>Fuel type</th>
+                                <th>Color(s)</th>
+                                <th>Mileage</th>
+                                <th>Sales Price</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vehicle-list">
+
+
+                        </tbody>
+                    </table>
+
+
+                    <div class="clear"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+
+        function availableQuantity() {
+            ajax({
+                type: 'get',
+                url: config.rootUrl + 'public/available-quantity-for-sale',
+                success: function (res) {
+                    console.log(res)
+                    var code = res.code
+                    if (code === 2000) {
+
+                        setHtmlValueById('saleable', res.data)
+                    }
+                }
+            })
+        }
+
+        function queryList() {
+            var token = getTokenString()
+            var data = {
+                vehicleType: getValueById('vehicleType'),
+                manufacturerName: getValueById('manufacturer'),
+                modelYear: getValueById('modelYear'),
+                fuelType: getValueById('fuelType'),
+                color: getValueById('color'),
+                keyword: getValueById('keyword'),
+                vin: getValueById('vin'),
+
+            }
+            if (mgrPerm) {
+                data.saleStatus = getValueById('saleStatus')
+            }
+            ajax({
+                method: 'post',
+                url: config.rootUrl + 'public/search',
+                data: data,
+                success: function (res) {
+                    var code = res.code
+                    console.log(res)
+                    if (code === 2000) {
+                        var listEle = document.getElementById('vehicle-list');
+                        listEle.innerHTML = '';
+                        var data = res.data
+                        var html = []
+                        if (data.length !== 0) {
+
+                        } else {
+                            html.push('<tr><td colspan=10 style="text-align:center;color:red">Sorry, it looks like we don’t have that in stock!</td></tr>')
+                        }
+                        data.forEach(item => {
+                            html.push('<tr>');
+                            html.push('<td>' + item.vin + '</td>');
+                            html.push('<td>' + item.vehicleType + '</td>');
+                            html.push('<td>' + item.modelYear + '</td>');
+                            html.push('<td>' + item.manufacturerName + '</td>');
+                            html.push('<td>' + item.modelName + '</td>');
+                            html.push('<td>' + item.fuelType + '</td>');
+                            html.push('<td>' + item.colors + '</td>');
+                            html.push('<td>' + item.mileage + '</td>');
+                            html.push('<td>$' + item.salePrice + '</td>');
+                            html.push('<td><a href="vehicle_detail.html?vin=' + item.vin + '" >detail</a></td>');
+                            html.push(' </tr>');
+                        });
+
+                        listEle.innerHTML = html.join('')
+                    }
+                },
+                error: function (error) {
+                    console.error(error)
+                }
+            }, token)
+        }
+
+
+        function getVehicleTypeList() {
+            ajax({
+                type: 'get',
+                url: config.rootUrl + 'public/vehicle/types',
+                success: function (res) {
+                    var code = res.code
+                    var html = []
+                    var listEle = document.getElementById('vehicleType');
+                    listEle.innerHTML = '<option value="">--please choose--</option>';
+                    html.push('<option value="">--please choose--</option>')
+                    if (code === 2000) {
+                        var data = res.data
+                        data.forEach(item => {
+                            html.push('<option value="' + item.vtype + '">' + item.vtype + '</option>')
+                        })
+
+                        listEle.innerHTML = html.join('')
+                    }
+                }
+            })
+        }
+
+        function getManufacturerList() {
+            ajax({
+                type: 'get',
+                url: config.rootUrl + 'public/manufacturers',
+                success: function (res) {
+                    var code = res.code
+                    var html = []
+                    var listEle = document.getElementById('manufacturer');
+                    listEle.innerHTML = '<option value="">--please choose--</option>';
+                    html.push('<option value="">--please choose--</option>')
+                    if (code === 2000) {
+                        var data = res.data
+                        data.forEach(item => {
+                            html.push('<option value="' + item.vmaker + '">' + item.vmaker + '</option>')
+                        })
+                        listEle.innerHTML = html.join('')
+                    }
+                }
+            })
+        }
+
+        function getColorList() {
+            ajax({
+                type: 'get',
+                url: config.rootUrl + 'public/colors',
+                success: function (res) {
+                    var code = res.code
+                    var html = []
+                    var listEle = document.getElementById('color');
+                    listEle.innerHTML = '<option value="">--please choose--</option>';
+                    html.push('<option value="">--please choose--</option>')
+                    if (code === 2000) {
+                        var data = res.data
+                        data.forEach(item => {
+                            html.push('<option value="' + item.vcolor + '">' + item.vcolor + '</option>')
+                        })
+                        listEle.innerHTML = html.join('')
+                    }
+                }
+            })
+        }
+
+
+        function checkUser() {
+            var ele = document.getElementById('user-info');
+            var token = getTokenString()
+            if (token) {
+
+                var decodedPayload = tokenInfoObj(token)
+                ele.innerHTML = '<span style="color: dodgerblue">' + decodedPayload.username + '  [' + decodedPayload.role + ']' + '</span><span onclick="logout()" style="color: brown;cursor: pointer;margin-left: 6px;">sign out</span>'
+
+                var vinSearch = document.getElementById('vinSearch')
+                vinSearch.innerHTML = 'VIN: <input type="text" name="vin" id="vin" style="width: 150px;"/>'
+
+                if (decodedPayload.role === 'InventoryClerks' || decodedPayload.role === 'Owner' || decodedPayload.role === 'Manager') {
+                    var divElement = document.getElementById('pending-box');
+                    divElement.style.display = 'block';
+                    getPendingCount(token)
+                }
+
+
+            } else {
+                ele.innerHTML = '<span onclick="login()" style="color: brown;cursor: pointer;margin-left: 6px;">sign in</span>';
+            }
+
+        }
+
+        function getPendingCount(token) {
+            console.log('token', token)
+            ajax({
+                method: 'get',
+                url: config.rootUrl + 'api/v1/vehicle/pending',
+                success: function (res) {
+                    var code = res.code
+                    if (code === 2000) {
+                        setTextValueById('pending', res.data)
+                    } else if (code === 4001) {
+                        flashToken()
+                    }
+                }
+            }, token)
+        }
+
+
+
+        function logout() {
+            flashToken()
+        }
+
+        function login() {
+            location.href = 'login.html'
+        }
+
+        function addVehicle() {
+            location.href = 'vehicle_add.html'
+        }
+
+        function mangerPrivatePerm() {
+            var token = getTokenString()
+            if (token) {
+                var payload = tokenInfoObj(token)
+                var role = payload.role
+                if (role === 'Manager') {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        function getReportPerm() {
+            var token = getTokenString()
+            if (token) {
+                var payload = tokenInfoObj(token)
+                var role = payload.role
+                if (role === 'Manager' || role === 'Owner') {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        checkUser()
+
+
+        availableQuantity()
+        getVehicleTypeList()
+        getManufacturerList()
+
+        var mgrPerm = mangerPrivatePerm()
+
+        if (mgrPerm) {
+            var ele = document.getElementById('saleStatusVal')
+            ele.style.display = 'inline-block'
+        }
+
+        if(getReportPerm()){
+            show('report')
+        }
+
+        getColorList()
+        queryList()
+
+    </script>
+</body>
+
+</html>

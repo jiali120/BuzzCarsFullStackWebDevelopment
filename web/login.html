@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuzzCar - Login</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/base.js"></script>
+    <script src="./js/ajax.js"></script>
+    <style>
+        #container {
+            padding: 10px;
+        }
+
+        td:first-child {
+            width: 25%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="container" >
+        <h2>Login</h2>
+        <table>
+            <tr>
+                <td>username</td>
+                <td><input type="text" id="username" value="clerk" required /> </td>
+            </tr>
+            <tr>
+                <td>password</td>
+                <td><input type="password" id="password" value="123456" required /> </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button onclick="login()">Login</button>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <script>
+        function login() {
+            var username = getValueById('username')
+            var password = getValueById('password')
+            ajax({
+                method: 'post',
+                url: config.rootUrl + 'login',
+                data: {
+                    username: username,
+                    password: password
+                },
+                success: function (res) {
+                    var code = res.code
+                    if (code === 2000) {
+                        localStorage.setItem('token', res.data);
+                        location.href = 'index.html'
+                    } else {
+                        alert('The username or password is incorrect')
+                        setTextValueById('username', '')
+                        setTextValueById('password', '')
+                    }
+                }
+            })
+        }
+    </script>
+
+</body>
+
+</html>

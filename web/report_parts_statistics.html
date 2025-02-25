@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>BuzzCar</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/base.js"></script>
+    <script src="./js/ajax.js"></script>
+    <style>
+        #header {
+            height: 168px;
+            background: #d0d0d0;
+        }
+
+        #search-div {
+            padding: 20px;
+        }
+
+        #pending-box,
+        #saleStatusVal {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="outer-container">
+
+
+
+        <div id="container">
+
+
+            <div id="content">
+                <div class="main">
+                    <h2><a href="index.html">Home</a></h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>vendorName</th>
+                                <th>number</th>
+                                <th>amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-list">
+
+                        </tbody>
+                    </table>
+                    <div class="clear"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+
+        function getPerm() {
+            var token = getTokenString()
+            if (token) {
+                var payload = tokenInfoObj(token)
+                var role = payload.role
+                if (role === 'Manager' || role === 'Owner') {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+
+
+        function getList() {
+            var token = getTokenString()
+            ajax({
+                type: 'get',
+                url: config.rootUrl + 'api/v1/parts-stat',
+                success: function (res) {
+                    var code = res.code
+                    if (code === 2000) {
+                        var listEle = document.getElementById('data-list');
+                        listEle.innerHTML = '';
+                        var data = res.data
+                        var html = []
+                      
+                        data.forEach(item => {
+                            html.push('<tr>');
+                            html.push('<td>' + tString(item.vendorName) + '</td>');
+                            html.push('<td>' + item.number + '</td>');
+                            html.push('<td>' + item.amount + '</td>');
+                            html.push(' </tr>');
+                        });
+
+                        listEle.innerHTML = html.join('')
+
+
+                    } else if (code == 4001) {
+                        alert(res.message)
+                        location.href = 'login.html'
+                    }else{
+                        alert(res.message)
+                    }
+                }
+            }, token)
+        }
+
+        getList();
+
+        function tString(val){
+            if(val){
+                return val;
+            }else{
+                return '';
+            }
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuzzCar - Add Customer</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/base.js"></script>
+    <script src="./js/ajax.js"></script>
+    <style>
+        #container {
+            padding: 10px;
+        }
+
+        td:first-child {
+            width: 25%;
+        }
+        #container{
+            width: 700px;
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="container">
+        <h3>Add Customer</h3>
+        <table>
+            <tr>
+                <td>street</td>
+             
+                <td><input type="text" id="street" name="street" /> </td>
+                </td>
+            </tr>
+            <tr>
+                <td>city</td>
+             
+                <td><input type="text" id="city" name="city" /> </td>
+              
+            </tr>
+            <tr>
+                <td>state</td>
+              
+                <td><input type="text" id="state" name="state" /> </td>
+               
+            </tr>
+            <tr>
+                <td>postalCode</td>
+             
+                <td><input type="text" id="postalCode" name="postalCode" /> </td>
+               
+            </tr>
+            <tr>
+                <td>phone</td>
+              
+                <td><input type="text" id="phone" name="phone" /> </td>
+               
+            </tr>
+            <tr>
+                <td>email</td>
+              
+                <td><input type="text" id="email" name="email" /> </td>
+               
+            </tr>
+            <tr>
+                <td>customerType</td>
+               
+                <td>
+                    <select id="customerType" name="customerType">
+                        <option value="Business">Business</option>
+                        <option value="Individual">Individual</option>
+                    </select>
+              
+                </td>
+            </tr>
+
+            <tr>
+                <td>Customer ID</td>
+                <td><input type="text" id="cid" name="cid" /> </td>
+            </tr>
+            <tr>
+                <td>businessName</td>
+                <td><input type="text" id="businessName" name="businessName" /> </td>
+            </tr>
+            <tr>
+                <td>contactTitle</td>
+                <td><input type="text" id="contactTitle" name="contactTitle" /> </td>
+            </tr>
+
+            <tr>
+                <td>firstName</td>
+                <td><input type="text" id="firstName" name="firstName" /> </td>
+            </tr>
+
+            <tr>
+                <td>lastName</td>
+                <td><input type="text" id="lastName" name="lastName" /> </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <button type="button" onclick="saveForm()">Save</button>
+                </td>
+            </tr>
+        </table>
+
+
+
+    </div>
+    <script>
+
+
+        function saveForm() {
+            var token = getTokenString()
+            var data = {}
+            data.street = getValueById('street');
+            data.city = getValueById('city');
+            data.state = getValueById('state');
+            data.postalCode = getValueById('postalCode');
+            data.phone = getValueById('phone');
+            data.email = getValueById('email');
+            data.customerType = getValueById('customerType');
+            data.cid = getValueById('cid');
+            data.businessName = getValueById('businessName');
+            data.contactTitle = getValueById('contactTitle');
+            data.firstName = getValueById('firstName');
+            data.lastName = getValueById('lastName');
+
+
+            ajax({
+                method: 'post',
+                url: config.rootUrl + 'api/v1/customer',
+                data: data,
+                success: function (res) {
+                    var code = res.code
+                    console.log(res)
+                    if (code === 2000) {
+                        alert(res.message)
+                        window.close()
+                    } else if (code === 4001) {
+                        alert(res.message)
+                        location.href = 'login.html'
+                    } else {
+                        alert(res.message)
+                    }
+                }
+            }, token)
+        }
+
+        window.onunload = function () {
+            if (window.opener && !window.opener.closed) {
+                window.opener.queryCustomersByNum(); 
+            }
+        };
+
+    </script>
+
+</body>
+
+</html>

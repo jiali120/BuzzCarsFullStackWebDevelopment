@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuzzCar - Vehicle Detail</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/base.js"></script>
+    <script src="./js/ajax.js"></script>
+    <style>
+        #container {
+            padding: 10px;
+        }
+        td:first-child{
+            width: 25%;
+        }
+        #parts-data{
+            display: none;
+        }
+        h2, h3{
+            margin: 10px 0;
+        }
+     
+    </style>
+</head>
+
+<body>
+    <div id="container">
+
+
+        <h2><a href="index.html">Home</a></h2>
+        <h2>Vehicle Detail  </h2>
+        <h5><a href="javascript:openSale()" id="saleLink" style="margin-left: 10px;">Sale</a></h5>
+            <table>
+                <tr>
+                    <th>VIN</th>
+                    <td>
+                        <span id="vin"></span>
+                    </td>
+                    <th>manufacturer</th>
+                    <td>
+                        <span id="manufacturerName"></span>
+                    </td>
+                </tr>
+              
+                <tr>
+                    <th>vehicleType</th>
+                    <td>
+                        <span id="vehicleType"></span>
+                    </td>
+                    <th>modelName</th>
+                    <td>
+                        <span id="modelName"></span>
+                    </td>
+                </tr>
+         
+                <tr>
+                    <th>modelYear</th>
+                    <td>
+                        <span id="modelYear"></span>
+                    </td>
+                    <th>fuelType</th>
+                    <td>
+                        <span id="fuelType"></span>
+                    </td>
+                </tr>
+          
+
+                <tr>
+                    <th>vehicleDescription</th>
+                    <td>
+                        <span id="vehicleDescription"></span>
+                    </td>
+                    <th>mileage</th>
+                    <td>
+                        <span id="mileage"></span>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <th>condition</th>
+                    <td>
+                        <span id="condition"></span>
+                    </td>
+                    <th>Colors</th>
+                    <td>
+                        <span id="colors"></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>Seller</th>
+                    <td>
+                        <span id="sellerId"></span>
+                    </td>
+                    <th>Buy Date</th>
+                    <td>
+                        <span id="buyDate"></span>
+                    </td>
+                </tr>
+      
+                <tr>
+                    <th>Sale Price</th>
+                    <td >
+                        <span id="salePrice"></span>
+                    </td>
+                    <th id="buyPriceTitle">Buy Price</th>
+                    <td >
+                        <span id="buyPrice"></span>
+                    </td>
+                </tr>
+                
+            </table>
+
+            <table id="mgr-info" style="margin-top: 20px;">
+                <tr >
+                    <th style="width: 30%;">Total Cost Of Parts</th>
+                    <td >
+                        <span id="totalPartsPrice"></span>
+                    </td>
+                </tr>
+                <tr >
+                    <th style="width: 30%;">Seller</th>
+                    <td >
+                        <span id="sellerInfo"></span>
+                    </td>
+                </tr>
+                <tr >
+                    <th style="width: 30%;">Buyer</th>
+                    <td >
+                        <span id="buyerInfo"></span>
+                    </td>
+                </tr>
+            </table>
+
+            <div class="parts" id="parts-data">
+                <h2>Parts Order </h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <td>OrderNumber</td>
+                            <td>quantity</td>
+                            <td>cost</td>
+                            <td>vendor</td>
+                            <td>inventoryClerk</td>
+                            <td>description</td>
+                            <td>status</td>
+                            <td>Action</td>
+                        </tr>
+                    </thead>
+                    <tbody id="order-list">
+                    </tbody>
+                </table>
+
+                <div id="orderStatusForm" style="display: none;    margin: 20px 50px;">
+                    <h3>Edit Order Status</h3>
+                    <table>
+                        <tr>
+                            <td>OrderNumber</td>
+                            <td>
+                                <input type="hidden" id="vinVal" />
+                                <span id="orderNumberVal"></span> </td>
+                        </tr>
+                        <tr>
+                            <td>Status</td>
+                            <td>
+                                <select id="statusVal">
+                                    <option value="">----</option>
+                                    <option value="ordered">ordered</option>
+                                    <option value="received">received</option>
+                                    <option value="installed">installed</option>
+                                </select>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td colspan="2">
+                                <button onclick="updateStatus()">Update Status</button>
+                                <button onclick="closeStatus()">Close</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                
+
+                <h3>Add Parts Order</h3>
+                <table id="partForm">
+                        <tr>
+                            <td>quantity</td>
+                            <td>
+                                <input type="number" id="quantity" required/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>cost</td>
+                            <td>
+                                <input type="number" id="totalOfCost" required />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>vendor</td>
+                            <td>
+                                <select id="vendor" required>
+                                    </select>
+                                    <button type="button" onclick="newVendor()">new vendor</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>description</td>
+                            <td>
+                                <textarea id="description" rows="6" cols="50" required></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <button onclick="addPartsOrder()">Add Parts Order</button>
+                            </td>
+                        </tr>
+                </table>
+
+            </div>
+    </div>
+
+    <script>
+        var vin ;
+        function privatePerm(){
+            var token = getTokenString()
+            if (token) {
+                var payload = tokenInfoObj(token)
+                var role = payload.role
+                console.log('role============', role)
+                if (role === 'InventoryClerks' || role === 'Owner') {
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        }
+
+        function salePrivatePerm(){
+            var token = getTokenString()
+            if (token) {
+                var payload = tokenInfoObj(token)
+                var role = payload.role
+                if (role === 'Salespeople' || role === 'Owner') {
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        }
+
+        function mgrPrivatePerm(){
+            var token = getTokenString()
+            if (token) {
+                var payload = tokenInfoObj(token)
+                var role = payload.role
+                if (role === 'Manager') {
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+        }
+
+        var perm = privatePerm()
+        var salePerm = salePrivatePerm()
+        var mgrPerm = mgrPrivatePerm()
+
+        if(salePerm){
+            show('saleLink')
+        }else{
+            hide('saleLink')
+        }
+
+        function closeStatus(){
+            hide('orderStatusForm')
+        }
+
+        function updateStatus(){
+            var token = getTokenString()
+
+            ajax({
+                method: 'post',
+                url: config.rootUrl + 'api/v1/parts/status',
+                data: {
+                    vin: getValueById('vinVal'),
+                    status: getValueById('statusVal'),
+                    purchaseOrderNumber: getTextById('orderNumberVal'),
+                },
+                success: function (res) {
+                    var code = res.code
+                    console.log(res)
+                    if (code === 2000) {
+                        alert(res.message)
+                        location.reload()
+                    } else if (code === 4001) {
+                        alert(res.message)
+                        location.href = 'login.html'
+                    }else {
+                        alert(res.message)
+                    }
+                }
+            }, token)
+        }
+
+
+        function addPartsOrder(){
+            var token = getTokenString()
+
+            ajax({
+                method: 'post',
+                url: config.rootUrl + 'api/v1/parts',
+                data: {
+                    vin: vin,
+                    quantity: getValueById('quantity'),
+                    totalOfCost: getValueById('totalOfCost'),
+                    vendorName: getValueById('vendor'),
+                    description: getValueById('description')
+
+                },
+                success: function (res) {
+                    var code = res.code
+                    console.log(res)
+                    if (code === 2000) {
+                        alert(res.message)
+                        location.reload()
+                    } else if (code === 4001) {
+                        alert(res.message)
+                        location.href = 'login.html'
+                    }else {
+                        alert(res.message)
+                    }
+                }
+            }, token)
+
+        }
+
+
+        function getDetail() {
+         
+            var urlParams = new URLSearchParams(window.location.search);
+            vin = urlParams.get('vin');
+            console.log('vin', vin)
+
+            ajax({
+                method: 'get',
+                url: config.rootUrl + 'public/vehicle?vin=' + vin,
+                success: function (res) {
+                    var code = res.code
+                    console.log(res)
+                    if (code === 2000) {
+                        var data = res.data
+                        setTextValueById('vin', data.vin)
+                        setTextValueById('manufacturerName', data.manufacturerName)
+                        setTextValueById('vehicleType', data.vehicleType)
+                        setTextValueById('modelName', data.modelName)
+
+                        setTextValueById('modelYear', data.modelYear)
+                        setTextValueById('fuelType', data.fuelType)
+                        setTextValueById('vehicleDescription', data.vehicleDescription)
+                        setTextValueById('mileage', data.mileage)
+
+                        setTextValueById('condition', data.condition)
+
+                        setTextValueById('colors', data.colors)
+                        setTextValueById('sellerId', data.sellerId)
+                        setTextValueById('buyDate', data.buyDate)
+
+                        setTextValueById('salePrice', data.salePrice)
+
+                        if(perm || salePerm || mgrPerm){
+                            setTextValueById('buyPrice', data.buyPrice)
+                            
+                        }
+                    } else if (code === 4001) {
+                        alert(res.message)
+                        location.href = 'login.html'
+                    }
+                }
+            })
+        }
+
+        function getPartsOrder() {
+            var token = getTokenString()
+            var urlParams = new URLSearchParams(window.location.search);
+            var vin = urlParams.get('vin');
+            console.log('vin', vin)
+            ajax({
+                method: 'get',
+                url: config.rootUrl + 'api/v1/vehicle/parts?vin=' + vin,
+                success: function (res) {
+                    var code = res.code
+                    console.log(res)
+                    if (code === 2000) {
+                        var listEle = document.getElementById('order-list');
+                        listEle.innerHTML = '';
+                        var data = res.data
+                        var html = []
+                        if (data.length !== 0) {
+                            var cost = 0.0
+                            data.forEach(item => {
+                                html.push('<tr>');
+                                html.push('<td>' + item.purchaseOrderNumber + '</td>');
+                                html.push('<td>' + item.quantity + '</td>');
+                                html.push('<td>' + item.totalOfCost + '</td>');
+                                html.push('<td>' + item.vendorName + '</td>');
+                                html.push('<td>' + item.inventoryClerk + '</td>');
+                                html.push('<td>' + item.description + '</td>');
+                                html.push('<td>' + item.status + '</td>');
+                                if( item.status!=='installed'){
+                                    html.push('<td><a href="javascript:editStatus(\''+item.vin+'\', \''+item.purchaseOrderNumber+'\', \''+item.status+'\')" >edit</a></td>');
+                                }else{
+                                    html.push('<td>--</td>');
+                                }
+                               
+                                html.push(' </tr>');
+
+                                cost = cost + item.totalOfCost
+
+                            });
+
+                            html.push('<tr><td>Total</td><td></td><td>'+cost.toFixed(2)+'</td><td></td><td></td><td></td><td></td><td></td></tr>')
+
+                        }
+
+                        listEle.innerHTML = html.join('')
+                    }
+                }
+            }, token)
+        }
+
+        function editStatus(vin, orderNumber, status){
+
+            show('orderStatusForm')
+
+            setTextValueById('orderNumberVal', orderNumber)
+            setValueById('vinVal', vin)
+
+            var selectElement = document.getElementById('statusVal');
+            for (var i = 0; i < selectElement.options.length; i++) {
+                if (selectElement.options[i].value === status) {
+                    selectElement.options[i].selected = true;
+                    break; 
+                }
+            }
+        }
+
+
+        function getVendorList() {
+            var token = getTokenString()
+            ajax({
+                type: 'get',
+                url: config.rootUrl + 'api/v1/vendor/query',
+                success: function (res) {
+                    var code = res.code
+                    var html = []
+                    var listEle = document.getElementById('vendor');
+                    listEle.innerHTML = '<option value="">--please choose--</option>';
+                    html.push('<option value="">--please choose--</option>')
+                    if (code === 2000) {
+                        var data = res.data
+                        data.forEach(item => {
+                            html.push('<option value="' + item.vendorName + '">' + item.vendorName + '</option>')
+                        })
+                        listEle.innerHTML = html.join('')
+                    }
+                }
+            }, token)
+        }
+
+
+        
+        if(perm){
+            show('parts-data')
+            getPartsOrder()
+            getVendorList()
+        }else{
+            hide('parts-data')
+        }
+
+        getDetail()
+ 
+        if(mgrPerm){
+            var ele = document.getElementById('mgr-info')
+            ele.style.display=''
+            var token = getTokenString()
+            ajax({
+                method: 'get',
+                url: config.rootUrl + 'api/v1/vehicle/parts/cost?vin=' + vin,
+                success: function(res){
+                    var code = res.code
+                    if (code === 2000) {
+                        var data = res.data
+                        setTextValueById('totalPartsPrice', data)
+                    } else if(code === 4001){
+                        alert(res.message)
+                        location.href = 'login.html'
+                    } else {
+                        alert(res.message)
+                    }
+                }
+            }, token)
+
+            ajax({
+                method: 'get',
+                url: config.rootUrl + 'api/v1/vehicle/customers/info?vin=' + vin,
+                success: function(res){
+                    var code = res.code
+                    if (code === 2000) {
+                        var data = res.data
+                        setTextValueById('sellerInfo', data.seller)
+                        setTextValueById('buyerInfo', data.buyer)
+
+                    } else if(code === 4001){
+                        alert(res.message)
+                        location.href = 'login.html'
+                    } else {
+                        alert(res.message)
+                    }
+                }
+            }, token)
+
+        }else{
+            hide('mgr-info')
+        }
+        function openSale(){
+            location.href='sale.html?vin='+vin+'&price='+getTextById('salePrice')+'&buyPrice='+getTextById('buyPrice');
+        }
+
+
+        function newVendor(){
+            const width = 600;
+            const height = 500;
+            const left = (window.innerWidth - width) / 2;
+            const top = (window.innerHeight - height) / 2;
+            
+            const features = `width=${width},height=${height},left=${left},top=${top}`;
+
+            window.open('vendor_add.html', '_blank', features);
+        }
+
+
+    </script>
+
+</body>
+
+</html>

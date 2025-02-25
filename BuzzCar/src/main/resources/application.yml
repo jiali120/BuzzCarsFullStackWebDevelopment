@@ -1,0 +1,29 @@
+spring:
+  main:
+    allow-circular-references: true
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/cs6400_fa23_team011
+    username: root
+    password: 123456
+
+server:
+  servlet:
+    context-path: /
+    session:
+      timeout: 3600
+  port: 8888
+
+  tomcat:
+    remote_ip_header: X-Forwarded-For
+    protocol_header: X-Forwarded-Proto
+    port-header: X-Forwarded-Port
+    basedir: ./
+    accesslog:
+      enabled: true
+      directory: service-logs

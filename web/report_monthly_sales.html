@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>BuzzCar</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/base.js"></script>
+    <script src="./js/ajax.js"></script>
+    <style>
+        #header {
+            height: 168px;
+            background: #d0d0d0;
+        }
+
+        #search-div {
+            padding: 20px;
+        }
+
+        #pending-box,
+        #saleStatusVal {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="outer-container">
+
+
+
+        <div id="container">
+
+
+            <div id="content">
+                <div class="main">
+                    <h2><a href="index.html">Home</a></h2>
+                    <h5>Monthly Sales Summary</h5>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>year</th>
+                                <th>month</th>
+                                <th>totalNumberOfVehiclesSold</th>
+                                <th>totalSalesIncome</th>
+                                <th>totalIncome</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-list">
+
+                        </tbody>
+                    </table>
+
+                    <h5 style="margin: 10px 0 10px 0;">Report for specific month</h5>
+                    <div style="margin: 10px 0">
+                        Year:
+                        <select id="selectYear" style="height: 30px; width: 100px;">
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                            <option value="2021">2021</option>
+                            <option value="2020">2020</option>
+                            <option value="2019">2019</option>
+                            <option value="2018">2018</option>
+                            <option value="2017">2017</option>
+                            <option value="2016">2016</option>
+                            <option value="2015">2015</option>
+                            <option value="2014">2014</option>
+                            <option value="2013">2013</option>
+                            <option value="2012">2012</option>
+                            <option value="2011">2011</option>
+                            <option value="2010">2010</option>
+                            <option value="2009">2009</option>
+                            <option value="2008">2008</option>
+                            <option value="2007">2007</option>
+                        </select>
+                        Month:
+                        <select id="selectMonth" style="height: 30px; width: 100px;">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                            <option value="10">10</option>
+                            <option value="11">11</option>
+                            <option value="12">12</option>
+                        </select>
+                        <button onclick="searchList()">Search</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>FirstName</th>
+                                <th>LastName</th>
+                                <th>NumberOfVehicleSold</th>
+                                <th>TotalSales</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-list2">
+
+                        </tbody>
+                    </table>
+                    <div class="clear"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+
+        function getPerm() {
+            var token = getTokenString()
+            if (token) {
+                var payload = tokenInfoObj(token)
+                var role = payload.role
+                if (role === 'Manager' || role === 'Owner') {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+
+
+        function getList() {
+            var token = getTokenString()
+            ajax({
+                type: 'get',
+                url: config.rootUrl + 'api/v1/monthly-sales-summary',
+                success: function (res) {
+                    var code = res.code
+                    if (code === 2000) {
+                        var listEle = document.getElementById('data-list');
+                        listEle.innerHTML = '';
+                        var data = res.data
+                        var html = []
+
+                        data.forEach(item => {
+                            html.push('<tr>');
+                            html.push('<td>' + item.year + '</td>');
+                            html.push('<td>' + item.month + '</td>');
+                            html.push('<td>' + item.totalNumberOfVehiclesSold + '</td>');
+                            html.push('<td>' + item.totalSalesIncome + '</td>');
+                            html.push('<td>' + item.totalIncome + '</td>');
+                            html.push(' </tr>');
+                        });
+
+                        listEle.innerHTML = html.join('')
+
+
+                    } else if (code == 4001) {
+                        alert(res.message)
+                        location.href = 'login.html'
+                    } else {
+                        alert(res.message)
+                    }
+                }
+            }, token)
+        }
+
+        function getList2(year, month) {
+            var token = getTokenString()
+
+
+            ajax({
+                type: 'get',
+                url: config.rootUrl + 'api/v1/report-for-specific-month?year=' + year + '&month=' + month,
+                success: function (res) {
+                    var code = res.code
+                    if (code === 2000) {
+                        var listEle = document.getElementById('data-list2');
+                        listEle.innerHTML = '';
+                        var data = res.data
+                        var html = []
+
+                        data.forEach(item => {
+                            html.push('<tr>');
+                            html.push('<td>' + item.firstName + '</td>');
+                            html.push('<td>' + item.lastName + '</td>');
+                            html.push('<td>' + item.numberOfVehicleSold + '</td>');
+                            html.push('<td>' + item.totalSales + '</td>');
+                            html.push(' </tr>');
+                        });
+
+                        listEle.innerHTML = html.join('')
+
+                    } else if (code == 4001) {
+                        alert(res.message)
+                        location.href = 'login.html'
+                    } else {
+                        alert(res.message)
+                    }
+                }
+            }, token)
+        }
+
+        getList();
+
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth() + 1
+        getList2(year, month);
+
+        setValueById('selectYear', year)
+        setValueById('selectMonth', month)
+
+        function searchList(){
+            let year = getValueById('selectYear')
+            let month = getValueById('selectMonth')
+            getList2(year, month);
+        }
+
+    </script>
+</body>
+
+</html>

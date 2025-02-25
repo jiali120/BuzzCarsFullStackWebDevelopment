@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BuzzCar - Sale Vehicle</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="./js/base.js"></script>
+    <script src="./js/ajax.js"></script>
+    <style>
+        #container {
+            padding: 10px;
+        }
+
+        td:first-child {
+            width: 25%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="container">
+        <h2><a href="index.html">Home</a></h2>
+
+        <h3>Sale Vehicle</h3>
+
+        <table>
+            <tr>
+                <td>VIN</td>
+                <td>
+                    <span id="vin"></span>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Buyer</td>
+                <td>
+                    <select id="buyerId" name="buyerId">
+                    </select>
+                    <button type="button" onclick="newCustomer()">new customer</button>
+                </td>
+            </tr>
+
+            <tr>
+                <td>Sale Date</td>
+                <td>
+                    <input type="date" id="saleDate" name="saleDate" />
+                </td>
+            </tr>
+
+            <tr>
+                <td>Sale Price</td>
+                <td>
+                    $<span id="salePrice"></span>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="2">
+                    <button type="button" onclick="saveForm()">Save</button>
+                </td>
+            </tr>
+
+        </table>
+    </div>
+    <script>
+
+        var urlParams = new URLSearchParams(window.location.search);
+        var vin = urlParams.get('vin');
+        var price = urlParams.get('price')
+
+        var buyPrice = urlParams.get('buyPrice')
+
+        setTextValueById('vin', vin);
+        setTextValueById('salePrice', price);
+
+        function saveForm() {
+            var token = getTokenString()
+            var data = {}
+            
+
+            data.vin = vin
+            data.salePrice = price
+            data.originalPurchasePrice = buyPrice
+            data.buyerId =  document.getElementById('buyerId').value;
+            data.saleDate =  document.getElementById('saleDate').value;
+
+            ajax({
+                method: 'post',
+                url: config.rootUrl + 'api/v1/sale-transaction',
+                data: data,
+                success: function (res) {
+                    var code = res.code
+                    console.log(res)
+                    if (code === 2000) {
+                        alert(res.message)
+                        location.href = 'index.html'
+                    } else if (code === 4001) {
+                        alert(res.message)
+                        location.href = 'login.html'
+                    } else {
+                        alert(res.message)
+                    }
+                }
+            }, token)
+        }
+
+        function queryCustomersByNum() {
+            var token = getTokenString()
+            ajax({
+                method: 'get',
+                url: config.rootUrl + 'api/v1/customer/query?num=',
+                success: function (res) {
+
+                    var code = res.code
+                    var html = []
+                    var listEle = document.getElementById('buyerId');
+                    listEle.innerHTML = '<option value="">--please choose--</option>';
+                    html.push('<option value="">--please choose--</option>')
+
+                    console.log(res)
+                    var code = res.code
+                    if (code === 2000) {
+                        var data = res.data
+                        data.forEach(item => {
+                            html.push('<option value="' + item.cid + '">' + item.firstName + ' ' + item.lastName + '</option>')
+                        })
+                        listEle.innerHTML = html.join('')
+                    } else if (code === 4001) {
+                        location.href = 'login.html'
+                    }
+                }
+            }, token)
+        }
+
+        queryCustomersByNum()
+
+        function newCustomer(){
+            const width = 600;
+            const height = 500;
+            const left = (window.innerWidth - width) / 2;
+            const top = (window.innerHeight - height) / 2;
+            
+            const features = `width=${width},height=${height},left=${left},top=${top}`;
+            window.open('customer_add.html', '_blank', features);
+        }
+
+
+    </script>
+
+</body>
+
+</html>
